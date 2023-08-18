@@ -1,0 +1,29 @@
+﻿@page "/Users"
+
+<h3>Users</h3>
+@using CoreService.UserService.Crud
+@using CoreService.UserService.dto
+@inject IUserService _service
+
+@foreach(var item in AllUsers)
+{
+    <h5>@item.Name</h5>
+    <h5>@item.Phone</h5>
+}
+
+@code {
+    public List<UserModel> AllUsers = new List<UserModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var Data =  await _service.GetAllAsync();
+        List<UserModel> result = Data.entity.ToList().Select(x => new UserModel
+            {
+                Name = x.Name,
+                Phone = x.Phone,
+                ActualStartTime = x.ActualStartTime,
+                ActualEndTime = x.ActualEndTime
+            }).ToList();
+            AllUsers =  result;
+    }
+}
